@@ -2,9 +2,11 @@
   "name": "Node-Webiste-EB-Sample-App",
   "version": "0.0.1",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.16.2",
+    "request": "^2.83.0"
+  },
   "scripts": {
-//    "start": "node app.js"
     "start": "node veriapp.js"
 
   }
