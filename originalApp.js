@@ -1,11 +1,7 @@
 var port = process.env.PORT || 3000,
     http = require('http'),
     fs = require('fs');
-	
-console.log("Hello world!")
 
-	
-	
 http.createServer(function (req, res) {
   if (req.url.indexOf('/img') != -1) {
     var filePath = req.url.split('/img')[1];
