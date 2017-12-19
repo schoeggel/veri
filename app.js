@@ -25,7 +25,7 @@ http.createServer(function (req, res) {
     });
 	} else if (req.url.indexOf('/veri') != -1) {
     var filePath = req.url.split('/veri')[1];
-    fs.readFile(__dirname + '/public/js' + filePath, function (err, data) {
+    fs.readFile(__dirname + '/public/veri' + filePath, function (err, data) {
       if (err) console.log(err);
       res.writeHead(202, {'Content-Type': 'text/css'});
       res.write(data);
