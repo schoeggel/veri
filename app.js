@@ -23,6 +23,14 @@ http.createServer(function (req, res) {
       res.write(data);
       res.end();
     });
+	} else if (req.url.indexOf('/veri') != -1) {
+    var filePath = req.url.split('/veri')[1];
+    fs.readFile(__dirname + '/public/js' + filePath, function (err, data) {
+      if (err) console.log(err);
+      res.writeHead(202, {'Content-Type': 'text/css'});
+      res.write(data);
+      res.end();
+    });
   } else if(req.url.indexOf('/css') != -1) {
     var filePath = req.url.split('/css')[1];
     fs.readFile(__dirname + '/public/css' + filePath, function (err, data) {
