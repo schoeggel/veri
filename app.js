@@ -43,7 +43,7 @@ http.createServer(function (req, res) {
       res.write(data);
       res.end();
     });
-	} else if (req.url.indexOf('/veri') != -1) {
+ } else if (req.url.indexOf('/veri') != -1) {
     var filePath = req.url.split('/veri')[1];
     fs.readFile(__dirname + '/public/veri' + filePath, function (err, data) {
       if (err) console.log(err);
@@ -51,6 +51,18 @@ http.createServer(function (req, res) {
       res.write(data);
       res.end();
     });
+  } else if (req.url.indexOf('/db') != -1) {
+	con.query("CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))", function (err, result, fields) {
+    	if (err) throw err;
+    	console.log("create table");
+  	});
+	con.query("SELECT * FROM customers", function (err, result, fields) {
+    	if (err) throw err;
+    	console.log(result);
+	res.writeHead(201, {'Content-Type': 'text/db'});
+      	res.write(result);
+      	res.end();
+  });
   } else if(req.url.indexOf('/css') != -1) {
     var filePath = req.url.split('/css')[1];
     fs.readFile(__dirname + '/public/css' + filePath, function (err, data) {
