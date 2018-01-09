@@ -47,6 +47,13 @@ http.createServer(function (req, res) {
 	res.writeHead(200, {'Content-Type': 'text/text'});
       res.write('some Text.');
       res.end();
+
+  } else if (req.url.indexOf('/env') != -1) {
+    var filePath = req.url.split('/db')[1];
+    res.writeHead(200, {'Content-Type': 'text/text'});
+      res.write('env.hostname= ' + process.env.RDS_HOSTNAME);
+      res.end();
+ 
 	  
   } else if (req.url.indexOf('/js') != -1) {
     var filePath = req.url.split('/js')[1];
