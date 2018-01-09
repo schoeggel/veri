@@ -2,35 +2,11 @@
 var port = process.env.PORT || 3000,
     http = require('http'),
     fs = require('fs'),
-	stats = require('./actions');
-	
+	stats = require('./actions'),
+	db = require('./dbconn');	
 console.log("Hello world!");
 console.log("Test stats 1. barcode 123 --> " + stats.artikelNr('123'));
 console.log("Test stats 2. artikel = 002056 --> " + JSON.stringify(stats.stats('002056')));
-
-console.log('db-connection test1.');
-var mysql = require('mysql');
-console.log('db-connection test2.');
-var conndetails = {
-  host     : process.env.RDS_HOSTNAME,
-  user     : process.env.RDS_USERNAME,
-  password : process.env.RDS_PASSWORD,
-  port     : process.env.RDS_PORT
-} 
-var connection = mysql.createConnection(conndetails);
-
-console.log('db-connection test3.');
-connection.connect(function(err) {
-  if (err) {
-    console.error('Database connection failed: ' + err.stack);
-    return;
-  }
-  console.log('Connected to database.');
-});
-
-console.log('db-connection test4.');
-connection.end();
-console.log('db-connection test end.');
 
 	
 http.createServer(function (req, res) {
@@ -42,18 +18,20 @@ http.createServer(function (req, res) {
       res.write(data);
       res.end();
     });
-  } else if (req.url.indexOf('/db') != -1) {
-    var filePath = req.url.split('/db')[1];
-    console.log('/db called --> filePath = ' + filePath);
-	res.writeHead(200, {'Content-Type': 'text/text'});
-      res.write('some Text.');
+
+	} else if (req.url.indexOf('/dbcheck') != -1) {
+    res.writeHead(200, {'Content-Type': 'text/text'});
+      res.write('db check... --> ');
+	  console.log('db.check() --> ' + db.check());
+	  console.log('================ jetzt versucht er res.write... =============');
+	  res.write(db.check());
       res.end();
 
   } else if (req.url.indexOf('/env') != -1) {
     var filePath = req.url.split('/db')[1];
     res.writeHead(200, {'Content-Type': 'text/text'});
       
-	  res.write('env.infos= ' + JSON.stringify(conndetails));
+	  res.write('env.infos= ' + JSON.stringify(db.conndetails));
       res.end();
  
 	  
