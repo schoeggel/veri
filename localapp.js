@@ -11,12 +11,13 @@ console.log("Test stats 2. artikel = 002056 --> " + JSON.stringify(stats.stats('
 console.log('db-connection test1.');
 var mysql = require('mysql');
 console.log('db-connection test2.');
-var connection = mysql.createConnection({
+var conndetails = {
   host     : process.env.RDS_HOSTNAME,
   user     : process.env.RDS_USERNAME,
   password : process.env.RDS_PASSWORD,
   port     : process.env.RDS_PORT
-});
+} 
+var connection = mysql.createConnection(conndetails);
 
 console.log('db-connection test3.');
 connection.connect(function(err) {
@@ -51,7 +52,8 @@ http.createServer(function (req, res) {
   } else if (req.url.indexOf('/env') != -1) {
     var filePath = req.url.split('/db')[1];
     res.writeHead(200, {'Content-Type': 'text/text'});
-      res.write('env.hostname= ' + process.env.RDS_HOSTNAME);
+      
+	  res.write('env.infos= ' + JSON.stringify(conndetails));
       res.end();
  
 	  
