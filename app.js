@@ -44,7 +44,7 @@ http.createServer(function (req, res) {
     var filePath = req.url.split('/db')[1];
     res.writeHead(200, {'Content-Type': 'text/text'});
       
-	  res.write('env.infos= ' + JSON.stringify(db.conndetails));
+	  res.write('env.infos= ' + JSON.stringify(conndetails));
       res.end();
  
 	  
