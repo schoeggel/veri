@@ -4,10 +4,10 @@ var port = process.env.PORT || 3000,
 	stats = require('./actions');
 
 const conndetails = {
-  host     : process.env.RDS_HOSTNAME,
-  user     : process.env.RDS_USERNAME,
-  password : process.env.RDS_PASSWORD,
-  port     : process.env.RDS_PORT
+  host     : process.env.RDS_HOSTNAME || 'localhost',
+  user     : process.env.RDS_USERNAME || 'root',
+  password : process.env.RDS_PASSWORD || 'joko',
+  port     : process.env.RDS_PORT || '3306'
 };
 
 var mysql      = require('mysql');
@@ -32,21 +32,27 @@ http.createServer(function (req, res) {
 		res.writeHead(200, {'Content-Type': 'text/text'});
 		res.write('dbcheck... --> ');
 		console.log('dbcheck --> ');
-		connection.query('STATUS;', function (error, results, fields) {
-			if (error) throw error;
-			console.log('The solution is: ', results[0]);
-			res.write(results);
-			});
+		connection.query('select 1 as results', function (error, results, fields) {
+			res.write('checking for err...');
+			if (error){
+				res.write('query error');
+				console.log('Query error! ');
+				console.log(error);
+			} else {
+				console.log('The result[0] is: ', results[0]);
+				console.log('The result is: ', results);
+				res.write(JSON.stringify(results));
+			};
+		res.end();});
+		
 		connection.end();
-		res.end();
+		
 
   } else if (req.url.indexOf('/env') != -1) {
     var filePath = req.url.split('/db')[1];
     res.writeHead(200, {'Content-Type': 'text/text'});
-      
 	  res.write('env.infos= ' + JSON.stringify(conndetails));
       res.end();
- 
 	  
   } else if (req.url.indexOf('/js') != -1) {
     var filePath = req.url.split('/js')[1];
