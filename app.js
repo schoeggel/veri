@@ -1,4 +1,3 @@
-
 var port = process.env.PORT || 3000,
     http = require('http'),
     fs = require('fs'),
@@ -8,6 +7,7 @@ console.log("Hello world!");
 console.log("Test stats 1. barcode 123 --> " + stats.artikelNr('123'));
 console.log("Test stats 2. artikel = 002056 --> " + JSON.stringify(stats.stats('002056')));
 
+	
 	
 http.createServer(function (req, res) {
   if (req.url.indexOf('/img') != -1) {
