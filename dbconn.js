@@ -1,21 +1,17 @@
 const conndetails = {
-  host     : process.env.RDS_HOSTNAME,
-  user     : process.env.RDS_USERNAME,
-  password : process.env.RDS_PASSWORD,
-  port     : process.env.RDS_PORT
+  host     : process.env.RDS_HOSTNAME || 'localhost',
+  user     : process.env.RDS_USERNAME || 'root',
+  password : process.env.RDS_PASSWORD || 'joko',
+  port     : process.env.RDS_PORT || '3306',
+  database : 'test'
 };
-exports.conndetails = conndetails;
+exports.conndetails = conndetails;		// für /env anfrage
 
+const mysql = require('mysql');
 
 module.exports.execute = function(sql, onSucces, onError) {
-    var mysql = require('mysql');
-	var db = mysql.createConnection(conndetails);	
-	db.connect(function(err) {
-		if (err) {
-			console.log('dbconn ---> Database connection failed: ' + err.stack);
-	}});
-			
-    db.all(sql, function(err, rows) {
+    var db = new mysql.createConnection(conndetails);
+    db.query(sql, function(err, rows, fields) {
         if (err) {
             if (onError) {
                 onError(err);
@@ -30,32 +26,5 @@ module.exports.execute = function(sql, onSucces, onError) {
             }
         }
     });
-    db.close();
+    db.end();
 };
-
-
-
-
-
-
-
-
-exports.check = function() {	
-	var mysql = require('mysql');
-	var connection = mysql.createConnection(conndetails);	
-	var cnstatus = 'init';
-	connection.connect(
-		function(err) {
-				if (err) {
-					console.log('dbconn ---> Database connection failed: ' + err.stack);
-					cnstatus = 'Fehler';
-				}
-		cnstatus = 'db check ok 1';
-	});
-	
-	connection.end();
-	console.log('db-connection test end.');
-	return (cnstatus);
-	};
-
-
