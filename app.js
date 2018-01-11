@@ -7,7 +7,8 @@ const conndetails = {
   host     : process.env.RDS_HOSTNAME || 'localhost',
   user     : process.env.RDS_USERNAME || 'root',
   password : process.env.RDS_PASSWORD || 'joko',
-  port     : process.env.RDS_PORT || '3306'
+  port     : process.env.RDS_PORT || '3306',
+  database : 'test'
 };
 
 var mysql      = require('mysql');
@@ -29,11 +30,9 @@ http.createServer(function (req, res) {
     });
 
 	} else if (req.url.indexOf('/dbcheck') != -1) {
-		res.writeHead(200, {'Content-Type': 'text/text'});
-		res.write('dbcheck... --> ');
+		res.writeHead(200, {'Content-Type': 'JSON'});
 		console.log('dbcheck --> ');
 		connection.query('select 1 as results', function (error, results, fields) {
-			res.write('checking for err...');
 			if (error){
 				res.write('query error');
 				console.log('Query error! ');
@@ -41,10 +40,9 @@ http.createServer(function (req, res) {
 			} else {
 				console.log('The result[0] is: ', results[0]);
 				console.log('The result is: ', results);
-				res.write(JSON.stringify(results));
+				res.write(results);
 			};
-		res.end();});
-		
+		res.end();});		
 		connection.end();
 		
 
@@ -54,6 +52,24 @@ http.createServer(function (req, res) {
 	  res.write('env.infos= ' + JSON.stringify(conndetails));
       res.end();
 	  
+} else if (req.url.indexOf('/stats') != -1) {
+    var artikelnr = req.url.split('/js')[1];
+    res.write('Artikelnr= ' , artikelnr); 
+	 
+	connection.query("SELECT * FROM verkauf", function (error, results, fields) {
+			res.write('checking for err...'	);
+			if (error){
+				res.write('query error');
+				console.log('Query error! ');
+				console.log(error);
+			} else {
+				console.log('The result[0] is: ', results[0]);
+				console.log('The result is: ', results);
+				res.write(JSON.stringify(results));
+			};
+			res.end();});		
+		connection.end();
+	
   } else if (req.url.indexOf('/js') != -1) {
     var filePath = req.url.split('/js')[1];
     fs.readFile(__dirname + '/public/js' + filePath, function (err, data) {
